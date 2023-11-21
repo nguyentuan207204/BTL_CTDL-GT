@@ -1,6 +1,6 @@
 #include <iostream>
-#include <stdexcept> // Add this for out_of_range
-#include <algorithm> // Add this for swap
+#include <stdexcept>
+#include <algorithm>
 
 #ifndef _Vector_cpp_
 #define _Vector_cpp_
@@ -21,6 +21,26 @@ public:
 
     ~Vector() {
         delete[] data;
+    }
+
+    void pushFront(const T& element) {
+        if (size == capacity) {
+            T* newData = new T[capacity * 2];
+            for (int i = 0; i < size; i++) {
+                newData[i + 1] = data[i];
+            }
+            delete[] data;
+            data = newData;
+            capacity *= 2;
+        } else {
+            for (int i = size; i > 0; i--) {
+                data[i] = data[i - 1];
+            }
+        }
+
+
+        data[0] = element;
+        size++;
     }
 
     void pushBack(const T& element) {
@@ -50,6 +70,40 @@ public:
                 capacity /= 2;
             }
         }
+    }
+    void Insert(int position, const T& value) {
+        if (position < 0 || position > size) {
+            std::cerr << "Invalid insertion position." << std::endl;
+            return;
+        }
+
+
+        if (size == capacity) {
+            T* newData = new T[capacity * 2];
+            for (int i = 0; i < position; i++) {
+                newData[i] = data[i];
+            }
+            newData[position] = value;
+            for (int i = position; i < size; i++) {
+                newData[i + 1] = data[i];
+            }
+            delete[] data;
+            data = newData;
+            size++;
+            capacity *= 2;
+        } else {
+            for (int i = size; i > position; i--) {
+                data[i] = data[i - 1];
+            }
+            data[position] = value;
+            size++;
+        }
+    }
+     void Clear() {
+        delete[] data;
+        size = 0;
+        capacity = 10;
+        data = new T[capacity];
     }
 
     T& operator[](int index) {
